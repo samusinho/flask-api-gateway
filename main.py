@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, make_response
 from flask_cors import CORS
 import requests
 from settings import URL, PORT, VOTES_URL, SECURITY_URL
@@ -48,6 +48,32 @@ def parties():
         return jsonify({
             "message": "Hubo un error al obtener la lista de partidos"
         }), 500
+@app.route("/users/<string:roleid>", methods=["POST"])
+def create_user(roleid):
+    body = request.get_json()
+    headers = {
+        "Content-Type": "application/json"
+    }
+    response = requests.post(
+        url=f"{SECURITY_URL}/users?roleId={roleid}",
+        json=body,
+        headers=headers
+    )
+    return jsonify(response.json()), 201
+
+EXCLUDED_URLS = ["/", "/login"]
+
+@app.before_request
+def middleware():
+    if request.path not in EXCLUDED_URLS:
+        token = request.headers.get("Authorization")
+        if token:
+            pass
+        else:
+            responseObject = {
+                "message": "Al parecer no has inicado sesión"
+            }
+            return make_response(jsonify(responseObject)), 401
 
 
 if __name__ == "__main__":
