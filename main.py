@@ -30,11 +30,11 @@ def middleware():
         token = request.headers.get("Authorization")
         if token:
             response = validate_permissions(token, clean_path(request.path), request.method)
-            if response.status_code == 200:
+            if response.status_code != 200:
                 return jsonify(response.json()), response.status_code
         else:
             return make_response(jsonify({
-                "message": "Al parecer no has inicado sesión"
+                "message": "Al parecer no has iniciado sesión o la sesión ya expiró..."
             })), 401
 
 
@@ -53,10 +53,10 @@ def validate_permissions(token, url, method):
     )
     return response
 
+
 def clean_path(path):
     parts = path.split("/")
-    return parts[3]
-
+    return "/"+parts[1]
 
 
 if __name__ == "__main__":
