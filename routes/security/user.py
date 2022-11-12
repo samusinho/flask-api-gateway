@@ -44,7 +44,8 @@ def create_user(roleid):
 @user_bp.route("/<string:userid>", methods=["DELETE"])
 def delete_user(userid):
     headers = {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "Authorization": request.headers.get("Authorization")
     }
     response = requests.delete(
         url=f"{SECURITY_URL}/users/{userid}",

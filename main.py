@@ -6,6 +6,7 @@ from settings import URL, PORT, SECURITY_URL
 from routes.elections.party import party_bp
 from routes.security.user import user_bp
 from routes.security.authentication import authentication_bp
+from routes.security.permission_roles import permissions_roles_bp
 
 app = Flask(__name__)
 cors = CORS(app)
@@ -18,9 +19,10 @@ def ping():
     })
 
 
-app.register_blueprint(party_bp, url_prefix ="/parties")
-app.register_blueprint(user_bp, url_prefix ="/users")
+app.register_blueprint(party_bp, url_prefix="/parties")
+app.register_blueprint(user_bp, url_prefix="/users")
 app.register_blueprint(authentication_bp, url_prefix="/authentication")
+app.register_blueprint(permissions_roles_bp, url_prefix="/permissions-roles")
 
 EXCLUDED_URLS = ["/", "/authentication/login"]
 
