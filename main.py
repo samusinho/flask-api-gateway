@@ -9,7 +9,7 @@ from routes.security.authentication import authentication_bp
 from routes.security.permission_roles import permissions_roles_bp
 
 app = Flask(__name__)
-cors = CORS(app)
+CORS(app)
 
 
 @app.route("/", methods=["GET"])
@@ -26,6 +26,7 @@ app.register_blueprint(permissions_roles_bp, url_prefix="/permissions-roles")
 
 EXCLUDED_URLS = ["/", "/authentication/login"]
 
+
 @app.before_request
 def middleware():
     if request.path not in EXCLUDED_URLS:
@@ -33,11 +34,10 @@ def middleware():
         if token:
             response = validate_permissions(token, clean_path(request.path), request.method)
             if response.status_code != 200:
-                return jsonify(response.json()), response.status_code
+                if response.status_code != 200:
+                    return jsonify(response.json()), response.status_code
         else:
-            return make_response(jsonify({
-                "message": "Al parecer no has iniciado sesión o la sesión ya expiró..."
-            })), 401
+            return jsonify({"message": "Debes iniciar sesión para continuar"}), 200
 
 
 def validate_permissions(token, url, method):
@@ -58,7 +58,7 @@ def validate_permissions(token, url, method):
 
 def clean_path(path):
     parts = path.split("/")
-    return "/"+parts[1]
+    return "/" + parts[1]
 
 
 if __name__ == "__main__":

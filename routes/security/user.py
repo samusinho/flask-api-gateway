@@ -24,13 +24,13 @@ def users():
 
 
 @user_bp.route("/<string:roleid>", methods=["POST"])
-def create_user(roleid):
+def create_user(role_id):
     body = request.get_json()
     headers = {
         "Content-Type": "application/json"
     }
     response = requests.post(
-        url=f"{SECURITY_URL}/users?roleId={roleid}",
+        url=f"{SECURITY_URL}/users?roleId={role_id}",
         json=body,
         headers=headers
     )
@@ -40,6 +40,7 @@ def create_user(roleid):
         }), 500
     else:
         return jsonify(response.json()), response.status_code
+
 
 @user_bp.route("/<string:userid>", methods=["DELETE"])
 def delete_user(userid):
@@ -57,4 +58,3 @@ def delete_user(userid):
         }), 500
     else:
         return jsonify(response.json()), response.status_code
-
