@@ -4,9 +4,8 @@ from settings import VOTES_URL
 
 candidate_bp = Blueprint("candidate_blueprint", __name__)
 
-candidate_bp.route("", methods=["POST"])
 
-
+@candidate_bp.route("", methods=["POST"])
 def create_candidate():
     body = request.get_json()
     headers = {
