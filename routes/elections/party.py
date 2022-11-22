@@ -56,3 +56,22 @@ def party(party_id):
         return jsonify({
             "message": "Hubo un error al obtener la información del partido"
         }), 500
+
+
+@party_bp.route("/<string:party_id>", methods=["PUT"])
+def update_party(party_id):
+    body = request.get_json()
+    headers = {
+        "Content-Type": "application/json"
+    }
+    response = requests.put(
+        url=f"{VOTES_URL}/parties/{party_id}",  # localhost:5000/parties (ms votaciones)
+        headers=headers,
+        json=body
+    )
+    if response.status_code == 500:
+        return jsonify({
+            "message": "Hubo un error al actualizar el partido político"
+        }), 500
+    else:
+        return jsonify(response.json()), response.status_code

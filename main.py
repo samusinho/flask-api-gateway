@@ -36,8 +36,6 @@ def middleware():
             if response.status_code != 200:
                 if response.status_code != 200:
                     return jsonify(response.json()), response.status_code
-        else:
-            return jsonify({"message": "Debes iniciar sesión para continuar"}), 200
 
 
 def validate_permissions(token, url, method):
